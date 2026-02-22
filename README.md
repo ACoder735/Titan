@@ -30,7 +30,7 @@ having a classic look, and being safe, strict and readable.
 # Titan features
 - `Titan` compiles directly into C, then into a .EXE, making it very fast.
 - `Titan` does not leave clutter in the same place where your projects are.
-- - Instead, it makes a folder named `titan-projects`, makes more folders with your script name, and puts the clutter there.
+- Instead, it makes a folder named `titan-projects`, makes more folders with your script name, and puts the clutter there.
 
 # Installation
 > **Coming soon!**
@@ -47,4 +47,33 @@ func main(){ // Runs every time the code starts
   console.typeln("Hello, World!") // Prints a message (semi-colons are optional in Titan.)
 }
 ```
-Save it as `HelloWorld.tn`.
+Save it as `HelloWorld.tn` in a folder called `TitanScripts`.
+
+# Running code:
+**⚠ Important Note: Go to [Adding Titan to PATH](https://example.com) before continuing.**
+
+After Titan is in PATH, open the command prompt and type this:
+``` bash
+cd Documents\TitanScripts
+titan HelloWorld.tn
+```
+It should print something like this:
+```
+Titan Compiler v0.9.0
+----------------------
+A subdirectory or file titan_projects already exists.
+Output: titan_projects\HelloWorld\HelloWorld.exe
+Compiling...
+Success! Running...
+
+Hello, World!
+```
+
+If so, Well Done! You've wrote your first Titan Script.
+
+Go to the [Titan PL Wiki]()
+
+
+
+
+
