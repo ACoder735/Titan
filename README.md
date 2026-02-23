@@ -53,7 +53,7 @@ Save it as `HelloWorld.tn` in a folder called `TitanScripts`.
 After Titan is in PATH, open the command prompt and type this:
 ``` bash
 cd Documents\TitanScripts
-titan HelloWorld.tn
+titan090 HelloWorld.tn
 ```
 It should print something like this:
 ```
