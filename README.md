@@ -7,6 +7,8 @@ having a classic look, and being safe, strict and readable.
 
 **Titan** aims to make a better proggramming world for coders.
 
+**⚠ Important Note: README.md will be showing the instructions for the most recent version.**
+
 **⚠ Important Note: This will probably only work on `Windows` computers, not `MacOS`, `Linux` or any other OS.**
 
 **⚠ Important Note: To run Titan, please install GCC:**
@@ -41,11 +43,7 @@ having a classic look, and being safe, strict and readable.
 
 2. Paste (or write) this code into the editor:
 ```
-import "std"* // Imports the standard library
-
-func main(){ // Runs every time the code starts
-  console.typeln("Hello, World!") // Prints a message (semi-colons are optional in Titan.)
-}
+console.typeln("Hello, World!") // Prints a message (semi-colons are optional in Titan.)
 ```
 Save it as `HelloWorld.tn` in a folder called `TitanScripts`.
 
