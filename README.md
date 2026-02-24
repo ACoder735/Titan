@@ -58,14 +58,18 @@ titan090 HelloWorld.tn
 ```
 It should print something like this:
 ```
-Titan Compiler v0.9.0
-----------------------
-A subdirectory or file titan_projects already exists.
-Output: titan_projects\HelloWorld\HelloWorld.exe
-Compiling...
-Success! Running...
+Creating project: titan_projects\HelloWorld
+Parsing...
+Generating Code...
+Compiling with GCC...
+Build Successful!
+Launching HelloWorld.exe...
+```
+Then it should open a new window with "Hello, World!" written on it.
 
-Hello, World!
+If it doesn't work, try copying this **EXACTLY**:
+```
+console.typeln("Hello, World!")
 ```
 
 If so, Well Done! You've wrote your first Titan Script.
