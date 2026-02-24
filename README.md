@@ -1,4 +1,5 @@
-![Titan](https://github.com/user-attachments/assets/3fa8753b-9174-4dbf-9fd6-63fadf4a4beb)
+<img width="702" height="351" alt="Titan2" src="https://github.com/user-attachments/assets/5c8d73fd-e4b0-4715-ab3c-e2c263172974" />
+
 # Titan
 
 This is the new Titan langauge, made to be simple, to be useful for making applications, 
@@ -69,7 +70,9 @@ Hello, World!
 
 If so, Well Done! You've wrote your first Titan Script.
 
-Go to the [Titan PL Wiki]()
+Go to the [Titan PL Wiki](https://github.com/ACoder735/Titan-PL/wiki) for more.
+
+> ***Happy Coding!***
 
 
 
