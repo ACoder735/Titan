@@ -15,11 +15,17 @@ having a classic look, and being safe, strict and readable.
 **⚠ Important Note: To run Titan, please install GCC:**
 > To compile and run Titan code, you need GCC installed via MSYS2.
 > ## Step 1: Install MSYS2
+> 
 > Go to https://www.msys2.org/.
+> 
 > Download the installer. `msys2-x86_64-20251213.exe` or `msys2-arm64-20251213.exe` (ARM64)
+> 
 > Run the installer. Keep the default installation path (C:\msys64).
+> 
 > Step 2: Install GCC (MinGW-w64)
+> 
 > Open the "MSYS2 UCRT64" terminal from your Start Menu.
+> 
 > Run the following command to update the package database:
 > ```
 > pacman -Syu
