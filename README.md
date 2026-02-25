@@ -44,46 +44,17 @@ having a classic look, and being safe, strict and readable.
 # Installation
 > **Coming soon!**
 
-# Starting Titan
+# Running:
 
-1. Open Visual Studio Code. If you don't have it, download it [here.](https://code.visualstudio.com/)
-
-2. Paste (or write) this code into the editor:
+```bash
+cd location
+titan090 script.tn
 ```
-console.typeln("Hello, World!") // Prints a message (semi-colons are optional in Titan.)
+### Running with no build:
+```bash
+cd location
+titan090 script.tn --no-build
 ```
-Save it as `HelloWorld.tn` in a folder called `TitanScripts`.
-
-# Running code:
-**⚠ Important Note: Go to [Adding Titan to PATH](https://example.com) before continuing.**
-
-After Titan is in PATH, open the command prompt and type this:
-``` bash
-cd Documents\TitanScripts
-titan090 HelloWorld.tn
-```
-It should print something like this:
-```
-Creating project: titan_projects\HelloWorld
-Parsing...
-Generating Code...
-Compiling with GCC...
-Build Successful!
-Launching HelloWorld.exe...
-```
-Then it should open a new window with "Hello, World!" written on it.
-
-If it doesn't work, try copying this **EXACTLY**:
-```
-console.typeln("Hello, World!")
-```
-
-If so, Well Done! You've wrote your first Titan Script.
-
-Go to the [Titan PL Wiki](https://github.com/ACoder735/Titan-PL/wiki) for more.
-
-> ***Happy Coding!***
-
 
 
 
