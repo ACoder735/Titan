@@ -2,9 +2,11 @@
 
 # Titan
 
-This is the new Titan langauge, made to be simple, to be useful for making applications, 
-having a classic look, and being safe, strict and readable.
--
+**This is the new Titan langauge, made to be:**
+- 🎯 Simple 
+- 📖 Readable
+- 🔥 Fast
+- 🎛 Controllable
 
 **Titan** aims to make a better proggramming world for coders.
 
@@ -48,14 +50,23 @@ having a classic look, and being safe, strict and readable.
 
 ```bash
 cd location
+
+# Build and run the script
 titan090 script.tn
-```
-### Running with no build:
-```bash
-cd location
+
+# Run the script WITHOUT building
 titan090 script.tn --no-build
 ```
 
+# Thank-yous
 
+I would like to thank the AI [Z.ai](https:\\chat.z.ai) for helping me 
+make this project.
 
+# More
 
+To see more of Titan, go to the [Titan Wiki](https://github.com/ACoder735/Titan-PL/wiki).
+
+To report bugs or give ideas, go to the [Titan Q&A](https://github.com/ACoder735/Titan-PL/discussions/categories/q-a) to report bugs, ask questions and so on.
+
+> ***Happy Coding!***
