@@ -2,13 +2,13 @@
 
 # Titan
 
-**This is the new Titan langauge, made to be:**
+**This is the new Titan language, made to be:**
 - 🎯 Simple 
 - 📖 Readable
 - 🔥 Fast
 - 🎛 Controllable
 
-**Titan** aims to make a better proggramming world for coders.
+**Titan** aims to make a better programming world for coders.
 
 **⚠ Important Note: README.md will be showing the instructions for the most recent version.**
 
@@ -41,7 +41,7 @@
 # Titan features
 - `Titan` compiles directly into C, then into a .EXE, making it very fast.
 - `Titan` does not leave clutter in the same place where your projects are.
-- Instead, it makes a folder named `titan-projects`, makes more folders with your script name, and puts the clutter there.
+- Instead, it makes a folder named `TitanProjects` and puts the generated files there.
 
 # Installation
 > **Coming soon!**
