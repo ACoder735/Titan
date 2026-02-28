@@ -10,7 +10,7 @@
 
 **Titan** aims to make a better programming world for coders.
 
-**⚠ Important Note: README.md will be showing the instructions for the most recent version.**
+**⚠ Important Note: Titan v0.9.0 will be released and ready for use in the 10th of March, 2026.**
 
 **⚠ Important Note: This will probably only work on `Windows` computers, not `MacOS`, `Linux` or any other OS.**
 
