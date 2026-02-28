@@ -1,0 +1,4 @@
+cd Titanv0.9.0
+gcc main.c lexer.c parser.c codegen.c -o titan090.exe
+
+titan090 test.tn

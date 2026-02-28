@@ -1,0 +1,19 @@
+Code
+Color
+Looks Like
+0	Black	(Invisible on black background)
+1	Blue	Dark Blue
+2	Green	Dark Green
+3	Aqua	Cyan / Teal
+4	Red	Dark Red
+5	Purple	Magenta
+6	Yellow	Dark Yellow / Brown
+7	White	Light Gray (Default)
+8	Gray	Dark Gray
+9	Light Blue	Bright Blue
+10	Light Green	Bright Green
+11	Light Aqua	Bright Cyan
+12	Light Red	Bright Red (Best for Errors)
+13	Light Purple	Bright Magenta
+14	Light Yellow	Bright Yellow
+15	Bright White	Pure White
