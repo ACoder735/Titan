@@ -10,7 +10,22 @@
 
 **Titan** aims to make a better programming world for coders.
 
-**⚠ Important Note: README.md will be showing the instructions for the most recent version.**
+Here are some snippets of Titan code:
+```
+console.typeln("Hello, World!") // Prints a message
+x := 5 // Makes a varible. Can also use Num x = 5 for more control
+if x < 10{ // If statement
+  console.typeln("x is smaller.")
+}
+```
+
+```
+for x:=0 to 10{ // For loop
+  console.typeln(Str(x)) // All types MUST be manually converted.
+}
+```
+
+**⚠ Important Note: Titan v0.9.0 will be released and ready for use in the 10th of March, 2026.**
 
 **⚠ Important Note: This will probably only work on `Windows` computers, not `MacOS`, `Linux` or any other OS.**
 

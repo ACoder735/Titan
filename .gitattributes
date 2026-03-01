@@ -1,3 +1,1 @@
-"*.c linguist-vendored" 
-"*.h linguist-vendored" 
-"*.tn linguist-language=Titan" 
+*.tn linguist-language=Titan
