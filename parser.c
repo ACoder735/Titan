@@ -196,7 +196,7 @@ ASTNode* parseStatement(Parser* parser) {
     return parseExpression(parser);
 }
 
-// --- Expression Parsing (Fixed) ---
+// --- Expression Parsing ---
 
 ASTNode* parseExpression(Parser* parser) {
     ASTNode* left = parseTerm(parser);
@@ -302,10 +302,23 @@ ASTNode* parseFactor(Parser* parser) {
             exit(1);
         }
         
-        // Standard Identifier
+        // Standard Identifier or Method Call
         ASTNode* node = createNode(AST_IDENTIFIER);
         strcpy(node->name, t.value);
         nextToken(parser);
+        
+        // NEW: Handle Method Chaining (e.g., console.typeln)
+        while (parser->currentToken.type == TOKEN_DOT) {
+            strcat(node->name, "."); // Append dot to name
+            nextToken(parser); // Eat dot
+            
+            if (parser->currentToken.type != TOKEN_IDENTIFIER) {
+                printf("Error: Expected identifier after '.' on line %d\n", parser->lexer->line);
+                exit(1);
+            }
+            strcat(node->name, parser->currentToken.value); // Append next part
+            nextToken(parser); // Eat next part
+        }
         
         // Function Call
         if (parser->currentToken.type == TOKEN_LPAREN) {

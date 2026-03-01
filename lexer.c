@@ -54,12 +54,15 @@ void initLexer(Lexer* lexer, const char* src) {
 // --- Token Scanning ---
 
 Token getNextToken(Lexer* lexer) {
-    Token t;
+    // FIX: Initialize token to zero to clear garbage values (no more '♥')
+    Token t = {0}; 
+    t.type = TOKEN_EOF; 
+    
     skipWhitespace(lexer);
     
     char c = peek(lexer);
     
-    if (c == '\0') { t.type = TOKEN_EOF; return t; }
+    if (c == '\0') { return t; }
     
     // Identifier or Keyword
     if (isAlpha(c)) {
@@ -82,7 +85,7 @@ Token getNextToken(Lexer* lexer) {
         else if (strcmp(t.value, "false") == 0) t.type = TOKEN_FALSE;
         else if (strcmp(t.value, "null") == 0) t.type = TOKEN_NULL;
         
-        // NEW: Type Keywords (Num, Str, Array)
+        // Type Keywords
         else if (strcmp(t.value, "Num") == 0) t.type = TOKEN_NUM_TYPE;
         else if (strcmp(t.value, "Str") == 0) t.type = TOKEN_STR_TYPE;
         else if (strcmp(t.value, "Array") == 0) t.type = TOKEN_ARR_TYPE;
@@ -122,7 +125,7 @@ Token getNextToken(Lexer* lexer) {
     if (c == ':') {
         advance(lexer);
         if (peek(lexer) == '=') { advance(lexer); t.type = TOKEN_VARDECL; strcpy(t.value, ":="); return t; }
-        t.type = TOKEN_COLON; strcpy(t.value, ":"); return t; 
+        t.type = TOKEN_COLON; return t; 
     }
     if (c == '=') {
         advance(lexer);

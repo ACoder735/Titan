@@ -1,2 +1,84 @@
-x := 5
-console.typeln(String(x))
+// ==========================================
+// TITAN v0.9.0 STRESS TEST
+// ==========================================
+
+// 1. Variable Declarations
+title := "Titan Stress Test"
+version := 0.9
+
+// 2. Explicit Types
+Num score = 100
+Str status = "Active"
+Array levels = [1, 2, 3]
+
+// 3. Math Operations
+a := 10
+b := 5
+sum := a + b
+diff := a - b
+prod := a * b
+div := a / b
+
+console.typeln("Math Test:")
+console.typeln(Str(sum))
+console.typeln(Str(diff))
+
+// 4. Logic & Loops
+if score == 100 {
+    console.typeln("Perfect Score!")
+}
+
+console.typeln("Loop Test:")
+for i := 0 to 3 {
+    console.typeln(Str(i))
+}
+
+// 5. Array Manipulation
+console.typeln("Array Test:")
+levels.push(4)
+levels.push(5)
+levels.remove(0)
+
+// Get length
+len := len(levels)
+console.typeln(Str(len))
+
+// Print Array (must convert to string)
+console.typeln(Str(levels))
+
+// 6. Functions
+func addNums(x, y) {
+    return x + y
+}
+
+result := addNums(50, 50)
+console.typeln("Function Result:")
+console.typeln(Str(result))
+
+// 7. Console Customization
+console.typeln("--- Console Features ---")
+
+// Set Title
+console.setTitle("Titan Runtime Test")
+
+// Change Color (10 = Green)
+console.color(10)
+console.typeln("This text is green!")
+
+// Change Color (12 = Red)
+console.color(12)
+console.typeln("This text is red!")
+
+// Change Color (14 = Yellow)
+console.color(14)
+console.typeln("This text is yellow!")
+
+// Reset Color (7 = Default White)
+console.color(7)
+console.typeln("Back to normal.")
+
+// Clear Screen (Uncomment to test)
+console.clear()
+console.typeln("Screen was just cleared!")
+
+console.typeln("Test Complete.")
