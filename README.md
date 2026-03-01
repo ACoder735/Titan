@@ -10,6 +10,21 @@
 
 **Titan** aims to make a better programming world for coders.
 
+Here are some snippets of Titan code:
+```
+console.typeln("Hello, World!")
+x := 5
+if x < 10{
+  console.typeln("x is smaller.")
+}
+```
+
+```
+for x:=0 to 10{
+  console.typeln(Str(x))
+}
+```
+
 **⚠ Important Note: Titan v0.9.0 will be released and ready for use in the 10th of March, 2026.**
 
 **⚠ Important Note: This will probably only work on `Windows` computers, not `MacOS`, `Linux` or any other OS.**
