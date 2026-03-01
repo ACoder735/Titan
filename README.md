@@ -12,16 +12,16 @@
 
 Here are some snippets of Titan code:
 ```
-console.typeln("Hello, World!")
-x := 5
-if x < 10{
+console.typeln("Hello, World!") // Prints a message
+x := 5 // Makes a varible. Can also use Num x = 5 for more control
+if x < 10{ // If statement
   console.typeln("x is smaller.")
 }
 ```
 
 ```
-for x:=0 to 10{
-  console.typeln(Str(x))
+for x:=0 to 10{ // For loop
+  console.typeln(Str(x)) // All types MUST be manually converted.
 }
 ```
 
