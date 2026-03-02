@@ -24,7 +24,7 @@ console.typeln(Str(sum))
 console.typeln(Str(diff))
 
 // 4. Logic & Loops
-if score == 100 {
+if score == 100 { // Ln. 27
     console.typeln("Perfect Score!")
 }
 
@@ -78,7 +78,7 @@ console.color(7)
 console.typeln("Back to normal.")
 
 // Clear Screen (Uncomment to test)
-console.clear()
-console.typeln("Screen was just cleared!")
+//console.clear()
+//console.typeln("Screen was just cleared!")
 
 console.typeln("Test Complete.")

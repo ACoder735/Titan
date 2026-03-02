@@ -39,16 +39,6 @@ int hasSymbol(const char* name) {
 void generateNode(ASTNode* node, FILE* out);
 void generateBlock(ASTNode* block, FILE* out);
 
-int getStepDirection(ASTNode* stepNode) {
-    if (!stepNode || stepNode->type != AST_ASSIGN) return 0;
-    ASTNode* expr = stepNode->right;
-    if (expr && expr->type == AST_BINOP) {
-        if (strcmp(expr->name, "+") == 0) return 1;
-        if (strcmp(expr->name, "-") == 0) return -1;
-    }
-    return 0;
-}
-
 void generateNode(ASTNode* node, FILE* out) {
     if (!node) return;
     
@@ -60,21 +50,23 @@ void generateNode(ASTNode* node, FILE* out) {
         case AST_IDENTIFIER: fprintf(out, "%s", node->name); break;
         
         case AST_ARRAY: {
-            fprintf(out, "titan_new_array()");
+            // Use GCC extension ({ ... }) to build array cleanly in one expression
+            fprintf(out, "({ TitanVar _t = titan_new_array(); ");
             ASTNode* elem = node->left;
             while(elem) {
-                fprintf(out, ", titan_arr_push_result("); 
+                fprintf(out, "titan_arr_push(_t, "); 
                 generateNode(elem, out); 
-                fprintf(out, ")");
+                fprintf(out, "); ");
                 elem = elem->next;
             }
+            fprintf(out, "_t; })");
             break;
         }
 
         case AST_VARDECL: {
             if (hasSymbol(node->name)) {
                 fprintf(out, "%s = ", node->name);
-                generateNode(node->right, out);
+                generateNode(node->right, out); // May be NULL, causing possible errors.
                 fprintf(out, ";\n");
             } else {
                 addSymbol(node->name);
@@ -154,25 +146,20 @@ void generateNode(ASTNode* node, FILE* out) {
                 }
                 else if (strcmp(methodName, "insert") == 0) {
                     ASTNode* idxArg = node->left;
-                    ASTNode* valArg = idxArg->next;
+                    ASTNode* valArg = idxArg ? idxArg->next : NULL;
                     fprintf(out, "titan_arr_insert(%s, (int)(", objName);
-                    generateNode(idxArg, out);
+                    if(idxArg) generateNode(idxArg, out);
                     fprintf(out, ").num, ");
-                    generateNode(valArg, out);
+                    if(valArg) generateNode(valArg, out);
                     fprintf(out, ")");
                 }
                 else if (strcmp(methodName, "replace") == 0) {
                     ASTNode* idxArg = node->left;
-                    ASTNode* valArg = idxArg->next;
+                    ASTNode* valArg = idxArg ? idxArg->next : NULL;
                     fprintf(out, "titan_arr_replace(%s, (int)(", objName);
-                    generateNode(idxArg, out);
+                    if(idxArg) generateNode(idxArg, out);
                     fprintf(out, ").num, ");
-                    generateNode(valArg, out);
-                    fprintf(out, ")");
-                }
-                else if (strcmp(methodName, "concat") == 0) {
-                    fprintf(out, "titan_arr_concat(%s, ", objName);
-                    generateNode(node->left, out);
+                    if(valArg) generateNode(valArg, out);
                     fprintf(out, ")");
                 }
             }
@@ -206,26 +193,9 @@ void generateNode(ASTNode* node, FILE* out) {
             addSymbol(node->name);
             fprintf(out, "for (TitanVar %s = ", node->name);
             generateNode(node->left, out);
-            fprintf(out, "; ");
-            
-            int dir = getStepDirection(node->step);
-            if (dir >= 0) {
-                fprintf(out, "titan_bool(titan_lt(%s, ", node->name);
-                generateNode(node->right, out);
-                fprintf(out, "))");
-            } else {
-                fprintf(out, "titan_bool(titan_gt(%s, ", node->name);
-                generateNode(node->right, out);
-                fprintf(out, "))");
-            }
-            fprintf(out, "; ");
-            
-            if (node->step && node->step->type == AST_ASSIGN) {
-                fprintf(out, "%s = ", node->step->name);
-                generateNode(node->step->right, out);
-            }
-            
-            fprintf(out, ") {\n");
+            fprintf(out, "; titan_bool(titan_lt(%s, ", node->name);
+            generateNode(node->right, out);
+            fprintf(out, ")); %s = titan_add(%s, titan_num(1))) {\n", node->name, node->name);
             enterScope(); generateBlock(node->body, out); leaveScope(); 
             fprintf(out, "}\n");
             break;
@@ -315,13 +285,6 @@ void writeRuntimeHeader(const char* filename) {
     fprintf(out, "        while (a->count + n >= a->capacity) a->capacity *= 2;\n");
     fprintf(out, "        a->data = realloc(a->data, sizeof(TitanVar) * a->capacity);\n");
     fprintf(out, "    }\n");
-    fprintf(out, "}\n\n");
-
-    fprintf(out, "TitanVar titan_arr_push_result(TitanVar list, TitanVar item) {\n");
-    fprintf(out, "    if(list.type != 3) return TITAN_NULL;\n");
-    fprintf(out, "    _titan_ensure_space(list.arr, 1);\n");
-    fprintf(out, "    list.arr->data[list.arr->count++] = item;\n");
-    fprintf(out, "    return list;\n");
     fprintf(out, "}\n\n");
 
     fprintf(out, "void titan_arr_push(TitanVar list, TitanVar item) {\n"); 

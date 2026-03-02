@@ -54,9 +54,8 @@ void initLexer(Lexer* lexer, const char* src) {
 // --- Token Scanning ---
 
 Token getNextToken(Lexer* lexer) {
-    // FIX: Initialize token to zero to clear garbage values (no more '♥')
     Token t = {0}; 
-    t.type = TOKEN_EOF; 
+    t.type = TOKEN_EOF;
     
     skipWhitespace(lexer);
     
@@ -125,7 +124,7 @@ Token getNextToken(Lexer* lexer) {
     if (c == ':') {
         advance(lexer);
         if (peek(lexer) == '=') { advance(lexer); t.type = TOKEN_VARDECL; strcpy(t.value, ":="); return t; }
-        t.type = TOKEN_COLON; return t; 
+        t.type = TOKEN_COLON; strcpy(t.value, ":"); return t; 
     }
     if (c == '=') {
         advance(lexer);
@@ -181,17 +180,17 @@ Token getNextToken(Lexer* lexer) {
     // Single-character tokens
     advance(lexer);
     switch(c) {
-        case '(': t.type = TOKEN_LPAREN; break;
-        case ')': t.type = TOKEN_RPAREN; break;
-        case '{': t.type = TOKEN_LBRACE; break;
-        case '}': t.type = TOKEN_RBRACE; break;
-        case ',': t.type = TOKEN_COMMA; break;
-        case '.': t.type = TOKEN_DOT; break;
-        case ';': t.type = TOKEN_SEMICOLON; break;
-        case '*': t.type = TOKEN_STAR; break;
-        case '%': t.type = TOKEN_PERCENT; break;
-        case '[': t.type = TOKEN_LBRACKET; break; 
-        case ']': t.type = TOKEN_RBRACKET; break;
+        case '(': t.type = TOKEN_LPAREN; strcpy(t.value, "("); break;
+        case ')': t.type = TOKEN_RPAREN; strcpy(t.value, ")"); break;
+        case '{': t.type = TOKEN_LBRACE; strcpy(t.value, "{"); break;
+        case '}': t.type = TOKEN_RBRACE; strcpy(t.value, "}"); break;
+        case ',': t.type = TOKEN_COMMA; strcpy(t.value, ","); break;
+        case '.': t.type = TOKEN_DOT; strcpy(t.value, "."); break;
+        case ';': t.type = TOKEN_SEMICOLON; strcpy(t.value, ";"); break;
+        case '*': t.type = TOKEN_STAR; strcpy(t.value, "*"); break; // FIX: Added strcpy
+        case '%': t.type = TOKEN_PERCENT; strcpy(t.value, "%"); break; // FIX: Added strcpy
+        case '[': t.type = TOKEN_LBRACKET; strcpy(t.value, "["); break; 
+        case ']': t.type = TOKEN_RBRACKET; strcpy(t.value, "]"); break;
         default:
             printf("LEXER ERROR: Unknown character '%c' on line %d\n", c, lexer->line);
             exit(1);

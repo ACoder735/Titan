@@ -122,13 +122,25 @@ ASTNode* parseStatement(Parser* parser) {
     if (t.type == TOKEN_IF) {
         nextToken(parser); 
         ASTNode* node = createNode(AST_IF);
-        expect(parser, TOKEN_LPAREN);
-        node->left = parseExpression(parser);
-        expect(parser, TOKEN_RPAREN);
-        node->right = parseBlock(parser);
+        
+        // FIX: Make parentheses optional
+        int hasParens = 0;
+        if (parser->currentToken.type == TOKEN_LPAREN) {
+            hasParens = 1;
+            nextToken(parser); 
+        }
+        
+        node->left = parseExpression(parser); 
+        
+        if (hasParens) {
+            expect(parser, TOKEN_RPAREN); 
+        }
+        
+        node->right = parseBlock(parser); 
+        
         if (parser->currentToken.type == TOKEN_ELSE) {
             nextToken(parser);
-            node->body = parseBlock(parser);
+            node->body = parseBlock(parser); 
         }
         return node;
     }
@@ -136,9 +148,19 @@ ASTNode* parseStatement(Parser* parser) {
     if (t.type == TOKEN_WHILE) {
         nextToken(parser);
         ASTNode* node = createNode(AST_WHILE);
-        expect(parser, TOKEN_LPAREN);
+        
+        int hasParens = 0;
+        if (parser->currentToken.type == TOKEN_LPAREN) {
+            hasParens = 1;
+            nextToken(parser);
+        }
+        
         node->left = parseExpression(parser);
-        expect(parser, TOKEN_RPAREN);
+        
+        if (hasParens) {
+            expect(parser, TOKEN_RPAREN);
+        }
+        
         node->right = parseBlock(parser);
         return node;
     }
@@ -146,15 +168,14 @@ ASTNode* parseStatement(Parser* parser) {
     if (t.type == TOKEN_FOR) {
         nextToken(parser);
         ASTNode* node = createNode(AST_FOR);
-        // Assuming syntax: for i := start to end { }
         if (parser->currentToken.type == TOKEN_IDENTIFIER) {
              strcpy(node->name, parser->currentToken.value);
              nextToken(parser); 
              expect(parser, TOKEN_VARDECL);
         }
-        node->left = parseExpression(parser); // Start
+        node->left = parseExpression(parser); 
         expect(parser, TOKEN_TO);
-        node->right = parseExpression(parser); // End
+        node->right = parseExpression(parser); 
         node->body = parseBlock(parser);
         return node;
     }
@@ -201,7 +222,15 @@ ASTNode* parseStatement(Parser* parser) {
 ASTNode* parseExpression(Parser* parser) {
     ASTNode* left = parseTerm(parser);
     
-    while (parser->currentToken.type == TOKEN_PLUS || parser->currentToken.type == TOKEN_MINUS) {
+    while (parser->currentToken.type == TOKEN_PLUS || 
+           parser->currentToken.type == TOKEN_MINUS ||
+           parser->currentToken.type == TOKEN_EQ ||
+           parser->currentToken.type == TOKEN_NEQ ||
+           parser->currentToken.type == TOKEN_LT ||
+           parser->currentToken.type == TOKEN_GT ||
+           parser->currentToken.type == TOKEN_LE ||
+           parser->currentToken.type == TOKEN_GE) {
+           
         ASTNode* node = createNode(AST_BINOP);
         strcpy(node->name, parser->currentToken.value);
         nextToken(parser);
@@ -282,6 +311,7 @@ ASTNode* parseFactor(Parser* parser) {
     
     // Identifiers / Calls / Keywords
     if (t.type == TOKEN_IDENTIFIER || t.type == TOKEN_STR_TYPE || t.type == TOKEN_NUM_TYPE || t.type == TOKEN_ARR_TYPE) {
+        
         // Handle built-in calls: Str(), Num(), Array()
         if (t.type == TOKEN_STR_TYPE || t.type == TOKEN_NUM_TYPE || t.type == TOKEN_ARR_TYPE) {
             if (peekNextToken(parser).type == TOKEN_LPAREN) {
@@ -292,8 +322,16 @@ ASTNode* parseFactor(Parser* parser) {
                  
                  nextToken(parser); // Eat keyword
                  nextToken(parser); // Eat (
+                 
                  if (parser->currentToken.type != TOKEN_RPAREN) {
                      node->left = parseExpression(parser);
+                     while (parser->currentToken.type == TOKEN_COMMA) {
+                         nextToken(parser); 
+                         ASTNode* nextArg = parseExpression(parser);
+                         ASTNode* curr = node->left;
+                         while(curr->next) curr = curr->next;
+                         curr->next = nextArg;
+                     }
                  }
                  expect(parser, TOKEN_RPAREN);
                  return node;
@@ -307,25 +345,35 @@ ASTNode* parseFactor(Parser* parser) {
         strcpy(node->name, t.value);
         nextToken(parser);
         
-        // NEW: Handle Method Chaining (e.g., console.typeln)
+        // Handle Method Chaining (e.g., console.typeln)
         while (parser->currentToken.type == TOKEN_DOT) {
-            strcat(node->name, "."); // Append dot to name
-            nextToken(parser); // Eat dot
+            strcat(node->name, ".");
+            nextToken(parser);
             
             if (parser->currentToken.type != TOKEN_IDENTIFIER) {
                 printf("Error: Expected identifier after '.' on line %d\n", parser->lexer->line);
                 exit(1);
             }
-            strcat(node->name, parser->currentToken.value); // Append next part
-            nextToken(parser); // Eat next part
+            strcat(node->name, parser->currentToken.value);
+            nextToken(parser);
         }
         
         // Function Call
         if (parser->currentToken.type == TOKEN_LPAREN) {
             node->type = AST_CALL;
             nextToken(parser);
+            
             if (parser->currentToken.type != TOKEN_RPAREN) {
                 node->left = parseExpression(parser);
+                // Handle multiple arguments
+                while (parser->currentToken.type == TOKEN_COMMA) {
+                    nextToken(parser); // Eat comma
+                    ASTNode* nextArg = parseExpression(parser);
+                    // Chain arguments via 'next' pointer
+                    ASTNode* curr = node->left;
+                    while(curr->next) curr = curr->next;
+                    curr->next = nextArg;
+                }
             }
             expect(parser, TOKEN_RPAREN);
         }

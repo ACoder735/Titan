@@ -1,43 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>      // For detailed error messages
+#include <errno.h>
 #include "parser.h"
 #include "lexer.h"
 #include "codegen.h"
 
-// Helper to check if a file exists
 int file_exists(const char *filename) {
     FILE *f = fopen(filename, "r");
     if (f) { fclose(f); return 1; }
     return 0;
 }
 
-// Helper to read file content
 char* readFile(const char* filename) {
     FILE* f = fopen(filename, "rb");
     if (!f) return NULL;
-    
     fseek(f, 0, SEEK_END);
     long length = ftell(f);
     fseek(f, 0, SEEK_SET);
-    
     char* buffer = malloc(length + 1);
-    if (!buffer) {
-        fclose(f);
-        return NULL;
-    }
-    
     fread(buffer, 1, length, f);
     buffer[length] = '\0';
     fclose(f);
     return buffer;
 }
 
-// Helper to create directory (Windows specific)
 void create_directory(const char *path) {
     char cmd[300];
-    // This Windows command creates the folder only if it doesn't exist
     sprintf(cmd, "if not exist \"%s\" mkdir \"%s\"", path, path);
     system(cmd);
 }
@@ -49,51 +38,62 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    char* inputArg = argv[1];
+    char inputArg[256];
+    strcpy(inputArg, argv[1]);
+
     int noBuild = 0;
-    
-    // Check for flags
     for (int i = 2; i < argc; i++) {
-        if (strcmp(argv[i], "--no-build") == 0) {
-            noBuild = 1;
-        }
+        if (strcmp(argv[i], "--no-build") == 0) noBuild = 1;
     }
 
     // --- PATH LOGIC ---
-    // Changed to PascalCase: TitanProjects
-    char projDir[256] = "TitanProjects"; 
-    char inputFile[512];
+    char projDir[256] = "TitanProjects";
+    char inputFile[512];    // The actual source file path
+    char scriptName[256];   // Just the filename (e.g., test.tn)
+    char buildDir[512];     // The folder for generated files
     char cFile[512];
     char exeFile[512];
 
-    // 1. Ensure Project Directory exists
-    create_directory(projDir);
-
-    // 2. Determine input file path
-    // If user provided a path (contains \ or /), use it as is.
-    // Otherwise, assume it's in the Project Directory.
-    if (strchr(inputArg, '\\') != NULL || strchr(inputArg, '/') != NULL) {
+    // 1. Determine Input File Path
+    // If input is just "test.tn", look in current directory first.
+    if (strchr(inputArg, '\\') == NULL && strchr(inputArg, '/') == NULL) {
+        // No path provided, assume current directory
         strcpy(inputFile, inputArg);
     } else {
-        // First check Project Folder
-        sprintf(inputFile, "%s\\%s", projDir, inputArg);
-        if (!file_exists(inputFile)) {
-            // If not in project folder, check current directory
-            if (file_exists(inputArg)) {
-                strcpy(inputFile, inputArg);
-            } else {
-                // Neither found, stick with project path (for error message)
-                sprintf(inputFile, "%s\\%s", projDir, inputArg);
-            }
-        }
+        // Path provided, use it
+        strcpy(inputFile, inputArg);
     }
 
-    // 3. Derive C and Exe paths
-    strcpy(cFile, inputFile);
-    strcat(cFile, ".c"); 
+    // 2. Check if file exists
+    if (!file_exists(inputFile)) {
+        printf("Error: Source file '%s' not found.\n", inputFile);
+        return 1;
+    }
+
+    // 3. Extract Script Name
+    char* lastSlash = strrchr(inputFile, '\\');
+    if (!lastSlash) lastSlash = strrchr(inputFile, '/');
+    if (lastSlash) strcpy(scriptName, lastSlash + 1);
+    else strcpy(scriptName, inputFile);
+
+    // 4. Determine Output Directory
+    // We want: TitanProjects/<scriptname_no_ext>/
+    // e.g., TitanProjects/test/
+    char folderName[100];
+    strcpy(folderName, scriptName);
+    char* dot = strrchr(folderName, '.');
+    if (dot) *dot = '\0'; // Remove extension
+
+    sprintf(buildDir, "%s\\%s", projDir, folderName);
     
-    strcpy(exeFile, inputFile);
-    strcat(exeFile, ".exe"); 
+    // Create folders if they don't exist
+    create_directory(projDir);
+    create_directory(buildDir);
+
+    // 5. Set Output File Paths
+    // The generated files will be: TitanProjects/test/test.tn.c
+    sprintf(cFile, "%s\\%s.c", buildDir, scriptName);
+    sprintf(exeFile, "%s\\%s.exe", buildDir, scriptName);
 
     // --- RUN LOGIC ---
 
@@ -110,9 +110,6 @@ int main(int argc, char** argv) {
         char* src = readFile(inputFile);
         if (!src) { 
             printf("CRITICAL ERROR: Could not read source file.\n");
-            printf("File Path: '%s'\n", inputFile);
-            printf("System Error: %s\n", strerror(errno));
-            printf("Suggestion: Create the file or check the spelling.\n");
             return 1; 
         }
 
@@ -125,14 +122,20 @@ int main(int argc, char** argv) {
         ASTNode* root = parseProgram(&parser);
         
         if (!root) {
-            printf("Compilation failed (Parser Error).\n");
+            printf("Compilation failed.\n");
             free(src);
             return 1;
         }
 
+        // Generate code into the Build Dir
         generateCode(root, cFile);
 
         char cmd[1024];
+        // Include the current directory for titan_runtime.h
+        // Wait, runtime is generated in buildDir? No, codegen generates it where the C file is.
+        // Let's verify codegen.c logic: it writes header next to the C file.
+        // So we compile from buildDir.
+        
         sprintf(cmd, "gcc \"%s\" -o \"%s\" -w", cFile, exeFile);
         
         int compileResult = system(cmd);
