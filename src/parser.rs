@@ -1,42 +1,18 @@
-use lexer::{Lexer, Token};
+use crate::lexer::{Lexer, Token};
 
+#[derive(Debug)]
 pub enum AST {
     Program(Vec<AST>),
-    VarDecl {
-        name: String,
-        value: Box<AST>,
-    },
-    Assign {
-        name: String,
-        value: Box<AST>,
-    },
+    VarDecl { name: String, value: Box<AST> },
+    Assign { name: String, value: Box<AST> },
     Number(f64),
     String(String),
     Identifier(String),
-    BinaryOp {
-        left: Box<AST>,
-        op: String,
-        right: Box<AST>,
-    },
-    If {
-        condition: Box<AST>,
-        body: Vec<AST>,
-        else_body: Option<Vec<AST>>,
-    },
-    While {
-        condition: Box<AST>,
-        body: Vec<AST>,
-    },
-    For {
-        var: String,
-        start: Box<AST>,
-        end: Box<AST>,
-        body: Vec<AST>,
-    },
-    FunctionCall {
-        name: String,
-        args: Vec<AST>,
-    },
+    BinaryOp { left: Box<AST>, op: String, right: Box<AST> },
+    If { condition: Box<AST>, body: Vec<AST>, else_body: Option<Vec<AST>> },
+    While { condition: Box<AST>, body: Vec<AST> },
+    For { var: String, start: Box<AST>, end: Box<AST>, body: Vec<AST> },
+    FunctionCall { name: String, args: Vec<AST> },
 }
 
 pub struct Parser {
@@ -68,7 +44,7 @@ impl Parser {
     }
 
     fn parse_statement(&mut self) -> AST {
-        // TO DO
+        // TODO
         AST::Number(0.0)
     }
 }
