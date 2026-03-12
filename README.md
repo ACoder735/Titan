@@ -3,5 +3,6 @@
 # Titan Programming Language
 
 Titan is a new scripting langue Built on top of **Rust**. 
+
 Titan is a bit like a version of Python that was equipped with lower-level fetures and is compiled.
 
