@@ -1,0 +1,9 @@
+x := 5
+
+if x > 10 {
+    typeln("big")
+} else if x > 2 {
+    typeln("medium")
+} else {
+    typeln("small")
+}
